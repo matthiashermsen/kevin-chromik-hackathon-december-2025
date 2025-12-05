@@ -125,7 +125,7 @@ export function Page() {
 
 	return (
 		<div className="flex justify-center">
-			<Card className="w-md md:w-lg lg:w-xl xl:w-2xl" variant="transparent">
+			<Card className="w-sm md:w-md lg:w-lg xl:w-xl" variant="transparent">
 				<Card.Header>
 					<Card.Title className="text-center">
 						Strukturiere deine Einkaufsliste!
