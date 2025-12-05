@@ -58,6 +58,7 @@ export function Page() {
 	async function structureNotes() {
 		setIsModalOpen(false);
 		setIsStructuringNotes(true);
+		setHasStructuringFailed(false);
 
 		try {
 			const reply = await chat([
@@ -112,8 +113,6 @@ export function Page() {
 			console.info(newStructuredNotes);
 
 			setStructuredNotes(newStructuredNotes);
-
-			setHasStructuringFailed(false);
 		} catch (error) {
 			console.error(error);
 			setHasStructuringFailed(true);
