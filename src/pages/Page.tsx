@@ -106,21 +106,12 @@ export function Page() {
 
 			const response = reply.choices[0]?.message.content ?? "";
 
-			// Debug
-			console.info({ response });
-
 			// sometimes the model wraps the JSON result inside a JSON codeblock
 			const responseWithoutCodeblock = response
 				.replace(/^\s*```(json)?\s*/i, "")
 				.replace(/\s*```\s*$/, "");
 
-			// Debug
-			console.info({ responseWithoutCodeblock });
-
 			const newStructuredNotes = JSON.parse(responseWithoutCodeblock);
-
-			// Debug
-			console.info({ newStructuredNotes });
 
 			setStructuredNotes(newStructuredNotes);
 		} catch (error) {
