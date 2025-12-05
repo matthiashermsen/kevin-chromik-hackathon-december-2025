@@ -14,7 +14,7 @@ export function Page() {
 		hasEngineBeenCreated,
 		initialize,
 		chat,
-		hasInitialisationFailed,
+		hasInitializationFailed,
 	} = useWebLLM();
 	const [hasStructuringFailed, setHasStructuringFailed] = useState(false);
 	const [structuredNotes, setStructuredNotes] = useState<
@@ -194,7 +194,7 @@ export function Page() {
 							</Modal.Dialog>
 						</Modal.Container>
 					</Modal>
-					{hasInitialisationFailed && (
+					{hasInitializationFailed && (
 						<Alert status="danger">
 							<Alert.Indicator />
 							<Alert.Content>

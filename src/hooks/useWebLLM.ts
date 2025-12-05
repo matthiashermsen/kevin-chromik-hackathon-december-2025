@@ -8,7 +8,7 @@ import { useState } from "react";
 export function useWebLLM() {
 	const [engine, setEngine] = useState<MLCEngine>();
 	const [isCreatingEngine, setIsCreatingEngine] = useState(false);
-	const [hasInitialisationFailed, setHasInitialisationFailed] = useState(false);
+	const [hasInitializationFailed, setHasInitializationFailed] = useState(false);
 
 	const hasEngineBeenCreated = !!engine;
 
@@ -23,11 +23,11 @@ export function useWebLLM() {
 			const engine = await CreateMLCEngine("Llama-3.1-8B-Instruct-q4f32_1-MLC");
 
 			setEngine(engine);
-			setHasInitialisationFailed(false);
+			setHasInitializationFailed(false);
 		} catch (err) {
 			// TODO
 			console.error(err);
-			setHasInitialisationFailed(true);
+			setHasInitializationFailed(true);
 		} finally {
 			setIsCreatingEngine(false);
 		}
@@ -47,7 +47,7 @@ export function useWebLLM() {
 
 	return {
 		isCreatingEngine,
-		hasInitialisationFailed,
+		hasInitializationFailed,
 		hasEngineBeenCreated,
 		initialize,
 		chat,
