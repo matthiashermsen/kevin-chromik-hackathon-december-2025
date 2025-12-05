@@ -1,0 +1,23 @@
+{
+	"files": {
+		"includes": [
+			"**",
+			"!node_modules",
+			"!build",
+			"!dist",
+			"!.idea",
+			"!.vscode",
+			"!.zed",
+			"!.fleet",
+			"!.vercel",
+			"!.turbo",
+			"!.netlify",
+			"!.tanstack",
+			"!**/routeTree.gen.ts",
+			"!test-results",
+			"!playwright-report",
+			"!blob-report",
+			"!playwright/.cache"
+		]
+	}
+}

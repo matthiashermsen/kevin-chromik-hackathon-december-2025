@@ -1,0 +1,41 @@
+# Logs
+logs
+*.log*
+
+# Node
+node_modules
+
+# Environment
+.env
+.env.*
+
+# Output
+dist
+build
+
+# Playwright
+/test-results/
+/playwright-report/
+/blob-report/
+/playwright/.cache/
+
+# IDE
+.vscode
+.idea
+.zed
+.fleet
+
+# Tanstack
+.tanstack
+
+# Turbo
+.turbo
+
+# Vercel
+.vercel
+
+# Netlify
+.netlify
+
+# OS
+.DS_Store
