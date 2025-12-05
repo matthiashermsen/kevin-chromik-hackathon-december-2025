@@ -20,7 +20,7 @@ export function useWebLLM() {
 		setIsCreatingEngine(true);
 
 		try {
-			const engine = await CreateMLCEngine("SmolLM2-360M-Instruct-q4f16_1-MLC");
+			const engine = await CreateMLCEngine("gemma-2-2b-it-q4f16_1-MLC");
 
 			setEngine(engine);
 			setHasInitializationFailed(false);

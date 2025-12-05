@@ -1,5 +1,5 @@
-import { Alert, Button, Card, Modal, Spinner } from "@heroui/react";
-import { Shuffle, TriangleAlert } from "lucide-react";
+import { Alert, Button, Card, Spinner } from "@heroui/react";
+import { Bot, Copy, Shuffle } from "lucide-react";
 import { useState } from "react";
 import { NewNoteContainer } from "../components/NewNoteContainer";
 import { NotesList } from "../components/NotesList";
@@ -7,7 +7,6 @@ import { useWebLLM } from "../hooks/useWebLLM";
 
 export function Page() {
 	const [notes, setNotes] = useState<Map<string, string>>(new Map());
-	const [isModalOpen, setIsModalOpen] = useState(false);
 	const [isStructuringNotes, setIsStructuringNotes] = useState(false);
 	const {
 		isCreatingEngine,
@@ -49,14 +48,12 @@ export function Page() {
 	}
 
 	async function initializeModel() {
-		setIsModalOpen(false);
 		await initialize();
 
 		setStructuredNotes({});
 	}
 
 	async function structureNotes() {
-		setIsModalOpen(false);
 		setIsStructuringNotes(true);
 		setHasStructuringFailed(false);
 
@@ -79,7 +76,7 @@ export function Page() {
 					Im Supermarkt befindet sich beispielsweise das Gemüse meist vorne, die Süßigkeiten sind weiter hinten.
 					Anhand der Notizen wäre es ungünstig, erst einen Blumenkohl zu holen, dann Schokolade und dann eine Gurke.
 					Ebenso wäre es bei deinem Ergebnis ungünstig, wenn man erst die Schokolade und dann das Gemüse holt. 
-					Dein Ergebnis sollte das berücksichtigen, damit man keine unnötigen Laufwege hat.
+					Dein Ergebnis sollte das alles berücksichtigen, damit man keine unnötigen Laufwege hat, bringe die Gruppen also auch in eine möglichst sinnvolle Reihenfolge.
 
 					Das Ergebnis sollte also grob dieses Schema haben
 
@@ -100,17 +97,30 @@ export function Page() {
 							"Vollkornbrot, 1 Packung"
 						]
 					}
-					`,
+
+					Antworte NUR mit diesem JSON Format und keinem weiteren Text, schicke also NUR das finale JSON Objekt!
+				`,
 				},
 				{ role: "user", content: JSON.stringify(Array.from(notes.values())) },
 			]);
 
-			const newStructuredNotes = JSON.parse(
-				reply.choices[0]?.message.content ?? "",
-			);
+			const response = reply.choices[0]?.message.content ?? "";
 
 			// Debug
-			console.info(newStructuredNotes);
+			console.info({ response });
+
+			// sometimes the model wraps the JSON result inside a JSON codeblock
+			const responseWithoutCodeblock = response
+				.replace(/^\s*```(json)?\s*/i, "")
+				.replace(/\s*```\s*$/, "");
+
+			// Debug
+			console.info({ responseWithoutCodeblock });
+
+			const newStructuredNotes = JSON.parse(responseWithoutCodeblock);
+
+			// Debug
+			console.info({ newStructuredNotes });
 
 			setStructuredNotes(newStructuredNotes);
 		} catch (error) {
@@ -142,16 +152,49 @@ export function Page() {
 					/>
 				</Card.Content>
 				<Card.Footer className="flex flex-col gap-2">
-					<Modal>
+					{!hasEngineBeenCreated && (
+						<>
+							<Alert status="warning">
+								<Alert.Indicator />
+								<Alert.Content>
+									<Alert.Title>
+										Diese App verwendet eine lokale AI mithilfe von WebLLM
+									</Alert.Title>
+									<Alert.Description>
+										Dabei wird ein lokal ausführbares Sprachmodell geladen.
+										Deine Daten bleiben also auf dem Gerät, es gibt keine
+										externen API Calls. Dennoch kann das initiale Laden einige
+										hundert MB betragen!
+									</Alert.Description>
+								</Alert.Content>
+							</Alert>
+							<Button
+								onPress={initializeModel}
+								isDisabled={isCreatingEngine}
+								className="w-full"
+								isPending={isCreatingEngine}
+							>
+								{({ isPending }) => (
+									<>
+										{isPending ? (
+											<Spinner color="current" size="sm" />
+										) : (
+											<Bot />
+										)}
+										{isPending
+											? "Initialisiere Model..."
+											: "Model initialisieren"}
+									</>
+								)}
+							</Button>
+						</>
+					)}
+					{hasEngineBeenCreated && (
 						<Button
-							onPress={() =>
-								hasEngineBeenCreated ? structureNotes() : setIsModalOpen(true)
-							}
-							isDisabled={
-								notes.size === 0 || isStructuringNotes || isCreatingEngine
-							}
+							onPress={structureNotes}
+							isDisabled={notes.size === 0 || isStructuringNotes}
 							className="w-full"
-							isPending={isStructuringNotes || isCreatingEngine}
+							isPending={isStructuringNotes}
 						>
 							{({ isPending }) => (
 								<>
@@ -160,39 +203,11 @@ export function Page() {
 									) : (
 										<Shuffle />
 									)}
-									{isPending
-										? hasEngineBeenCreated
-											? "Strukturiere..."
-											: "Initialisiere Model"
-										: "Strukturieren"}
+									{isPending ? "Strukturiere..." : "Strukturieren"}
 								</>
 							)}
 						</Button>
-						<Modal.Container isOpen={isModalOpen} onOpenChange={setIsModalOpen}>
-							<Modal.Dialog>
-								<Modal.CloseTrigger />
-								<Modal.Header>
-									<Modal.Icon>
-										<TriangleAlert />
-									</Modal.Icon>
-									<Modal.Heading>
-										Diese App verwendet eine lokale AI mithilfe von WebLLM
-									</Modal.Heading>
-								</Modal.Header>
-								<Modal.Body>
-									Dabei wird ein lokal ausführbares Sprachmodell geladen. Deine
-									Daten bleiben also auf dem Gerät, es gibt keine externen API
-									Calls. Dennoch kann das initiale Laden einige hundert MB
-									betragen!
-								</Modal.Body>
-								<Modal.Footer>
-									<Button onPress={initializeModel} className="w-full">
-										Model laden
-									</Button>
-								</Modal.Footer>
-							</Modal.Dialog>
-						</Modal.Container>
-					</Modal>
+					)}
 					{hasInitializationFailed && (
 						<Alert status="danger">
 							<Alert.Indicator />
@@ -215,14 +230,39 @@ export function Page() {
 							</Alert.Content>
 						</Alert>
 					)}
-					{Object.entries(structuredNotes).map(([groupName, items]) => (
-						<div key={groupName}>
-							<div>{groupName}</div>
-							{items.map((item) => (
-								<div key={`${groupName}-${item}`}>{item}</div>
-							))}
-						</div>
-					))}
+					{Object.entries(structuredNotes).length > 0 && (
+						<>
+							<div className="w-full">
+								{Object.entries(structuredNotes).map(([groupName, items]) => (
+									<div key={groupName}>
+										<div>{groupName}</div>
+										{items.map((item) => (
+											<div key={`${groupName} -${item} `}>{item}</div>
+										))}
+									</div>
+								))}
+							</div>
+							<Button
+								onPress={() =>
+									navigator.clipboard.writeText(
+										Object.entries(structuredNotes)
+											.map(([groupName, items]) => {
+												let groupContent = `${groupName}\n`;
+												groupContent += items
+													.map((item) => `  - ${item}`)
+													.join("\n");
+												return groupContent;
+											})
+											.join("\n\n"),
+									)
+								}
+								className="w-full"
+							>
+								<Copy />
+								Kopieren
+							</Button>
+						</>
+					)}
 				</Card.Footer>
 			</Card>
 		</div>
