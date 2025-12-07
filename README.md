@@ -15,4 +15,7 @@ Diese App soll dabei helfen, die Einträge "effizient" zu gruppieren, damit man 
 - Vercel
 
 ## Demo
-TODO
+
+https://kevin-chromik-hackathon-december-20.vercel.app/
+
+<img width="2344" height="2004" alt="image" src="https://github.com/user-attachments/assets/13b3da17-ced7-4744-b7d7-75c1c74ee600" />
