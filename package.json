@@ -1,36 +1,32 @@
 {
 	"name": "kevin-chromik-hackathon-december-2025",
-	"private": true,
 	"type": "module",
+	"private": true,
 	"scripts": {
-		"dev": "vite",
-		"build": "tsc -b && vite build",
+		"build": "nuxt build",
+		"dev": "nuxt dev",
+		"generate": "nuxt generate",
+		"preview": "nuxt preview",
+		"postinstall": "nuxt prepare",
 		"analyze": "biome ci --error-on-warnings .",
 		"fix:analyze": "biome check --write ."
 	},
 	"dependencies": {
-		"@heroui/react": "3.0.0-beta.2",
-		"@heroui/styles": "3.0.0-beta.2",
-		"@mlc-ai/web-llm": "0.2.80",
+		"@google/genai": "1.31.0",
+		"@primeuix/themes": "2.0.2",
 		"@tailwindcss/vite": "4.1.17",
-		"@tanstack/react-form": "1.27.0",
-		"@tanstack/react-query": "5.90.11",
-		"@tanstack/react-router": "1.139.14",
-		"lucide-react": "0.555.0",
-		"react": "19.2.0",
-		"react-dom": "19.2.0",
+		"@vueuse/nuxt": "14.1.0",
+		"nuxt": "4.2.1",
+		"primeicons": "7.0.0",
+		"primevue": "4.5.1",
 		"tailwindcss": "4.1.17",
+		"vue": "3.5.25",
+		"vue-router": "4.6.3",
 		"zod": "4.1.13"
 	},
 	"devDependencies": {
 		"@biomejs/biome": "2.3.8",
-		"@tanstack/react-router-devtools": "1.139.14",
-		"@tanstack/router-plugin": "1.139.14",
-		"@types/node": "24.10.1",
-		"@types/react": "19.2.7",
-		"@types/react-dom": "19.2.3",
-		"@vitejs/plugin-react": "5.1.1",
-		"typescript": "5.9.3",
-		"vite": "7.2.6"
+		"@primevue/nuxt-module": "4.5.1",
+		"typescript": "5.9.3"
 	}
 }

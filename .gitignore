@@ -9,27 +9,19 @@ node_modules
 .env
 .env.*
 
-# Output
+# dev/build outputs
+.output
+.data
+.nuxt
+.nitro
+.cache
 dist
-build
-
-# Playwright
-/test-results/
-/playwright-report/
-/blob-report/
-/playwright/.cache/
 
 # IDE
 .vscode
 .idea
 .zed
 .fleet
-
-# Tanstack
-.tanstack
-
-# Turbo
-.turbo
 
 # Vercel
 .vercel
@@ -39,3 +31,6 @@ build
 
 # OS
 .DS_Store
+
+# System
+*.pem
