@@ -101,6 +101,8 @@ async function structureNotes() {
                                 v-model="newNote"
                                 fluid
                                 :disabled="isStructuringNotes"
+                                enterkeyhint="enter"
+                                @keyup.enter="addNote"
                             />
                             <label for="new-note-input-label">Notiz</label>
                         </FloatLabel>
